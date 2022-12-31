@@ -25,6 +25,7 @@ public class HelloWorldJob {
     public Job job() {
         return this.jobBuilderFactory.get("basicJob")
                 .start(step1())
+                .incrementer(new DailyJobTimestamper())
                 .build();
     }
 
