@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @EnableBatchProcessing
-@SpringBootApplication
+//@SpringBootApplication
 public class ChunkJob {
 
     @Autowired

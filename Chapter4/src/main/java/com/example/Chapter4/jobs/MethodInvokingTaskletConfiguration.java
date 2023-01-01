@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @EnableBatchProcessing
-@SpringBootApplication
+//@SpringBootApplication
 public class MethodInvokingTaskletConfiguration {
 
     @Autowired

@@ -67,9 +67,17 @@ public class FlowJob {
     @Bean
     public Job conditionalStepLogicJob() {
         return this.jobBuilderFactory.get("conditionalStepLogicJob")
-                .start(preProcessingFlow())
+//                .start(preProcessingFlow())
+                .start(initializeBatch())
+                .incrementer(new DailyJobTimestamper())
                 .next(runBatch())
-                .end()
+                .build();
+    }
+
+    @Bean
+    public Step initializeBatch() {
+        return this.stepBuilderFactory.get("initializeBatch")
+                .flow(preProcessingFlow())
                 .build();
     }
 
