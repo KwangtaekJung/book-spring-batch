@@ -1,5 +1,6 @@
 package com.example.Chapter4.chunk;
 
+import com.example.Chapter4.jobs.DailyJobTimestamper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 
 @EnableBatchProcessing
-@SpringBootApplication
+//@SpringBootApplication
 public class BatchConfiguration {
 
     @Autowired
@@ -32,6 +33,7 @@ public class BatchConfiguration {
     public Job chunkBasicJob() {
         return this.jobBuilderFactory.get("chunkBasicJob")
                 .start(chunkBasicStep())
+                .incrementer(new DailyJobTimestamper())
                 .build();
     }
 

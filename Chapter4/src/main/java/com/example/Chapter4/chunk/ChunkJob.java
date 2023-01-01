@@ -1,5 +1,6 @@
 package com.example.Chapter4.chunk;
 
+import com.example.Chapter4.jobs.DailyJobTimestamper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -7,6 +8,10 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.batch.repeat.CompletionPolicy;
+import org.springframework.batch.repeat.policy.CompositeCompletionPolicy;
+import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
+import org.springframework.batch.repeat.policy.TimeoutTerminationPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,13 +35,14 @@ public class ChunkJob {
     public Job chunkBasedJob() {
         return this.jobBuilderFactory.get("chunkBasedJob")
                 .start(chunkBasedStep())
+                .incrementer(new DailyJobTimestamper())
                 .build();
     }
 
     @Bean
     public Step chunkBasedStep() {
         return this.stepBuilderFactory.get("chunkBasedStep")
-                .<String, String>chunk(1000)
+                .<String, String>chunk(completionPolicy())
                 .reader(itemReader())
                 .writer(itemWriter())
                 .build();
@@ -60,6 +66,20 @@ public class ChunkJob {
                 System.out.println(">> current item = " + item);
             }
         };
+    }
+
+    @Bean
+    public CompletionPolicy completionPolicy() {
+        CompositeCompletionPolicy policy = new CompositeCompletionPolicy();
+
+        policy.setPolicies(
+                new CompletionPolicy[] {
+                        new TimeoutTerminationPolicy(3),
+                        new SimpleCompletionPolicy(1000)
+                }
+        );
+
+        return policy;
     }
 
     public static void main(String[] args) {
