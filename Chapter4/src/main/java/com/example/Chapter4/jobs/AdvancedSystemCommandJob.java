@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 @EnableBatchProcessing
-@SpringBootApplication
+//@SpringBootApplication
 public class AdvancedSystemCommandJob {
 
     @Autowired
