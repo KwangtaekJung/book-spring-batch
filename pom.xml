@@ -18,6 +18,7 @@
     <modules>
         <module>Chapter2</module>
         <module>Chapter4</module>
+        <module>Chapter6</module>
     </modules>
 
     <properties>
