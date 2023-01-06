@@ -19,6 +19,7 @@
         <module>Chapter2</module>
         <module>Chapter4</module>
         <module>Chapter6</module>
+        <module>Chapter7</module>
     </modules>
 
     <properties>
@@ -45,6 +46,13 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
 <!--            <version>3.1.0</version>-->
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+<!--            <version>1.18.24</version>-->
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
