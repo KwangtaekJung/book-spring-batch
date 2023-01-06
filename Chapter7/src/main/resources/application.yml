@@ -11,7 +11,7 @@ spring:
       initialize-schme: always
     job:
       enabled: true
-      names: ${job.name:NONE} # Program arguments로 job.name 값이 넘어오면 해당 값과 일치하는 Job만 실행한다.
+#      names: ${job.name:NONE} # Program arguments로 job.name 값이 넘어오면 해당 값과 일치하는 Job만 실행한다.
   datasource:
     url: jdbc:mariadb://localhost:3306/spring_batch
     driver-class-name: org.mariadb.jdbc.Driver
