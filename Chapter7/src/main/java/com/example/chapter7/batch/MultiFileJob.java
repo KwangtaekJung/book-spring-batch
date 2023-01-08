@@ -34,7 +34,7 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class MultiFileJob {
     private final JobBuilderFactory jobBuilderFactory;
 
