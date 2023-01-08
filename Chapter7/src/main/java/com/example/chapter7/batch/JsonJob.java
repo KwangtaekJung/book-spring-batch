@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 
 @Slf4j
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class JsonJob {
 
     private final JobBuilderFactory jobBuilderFactory;
