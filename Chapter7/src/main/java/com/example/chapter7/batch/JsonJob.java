@@ -1,8 +1,8 @@
 package com.example.chapter7.batch;
 
-import com.example.chapter7.domain.CustomerForXml;
+import com.example.chapter7.domain.Customer;
 import com.example.chapter7.domain.CustomerWithTransactions;
-import com.example.chapter7.domain.Transaction;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -12,19 +12,21 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.xml.StaxEventItemReader;
-import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
+import org.springframework.batch.item.json.JacksonJsonObjectReader;
+import org.springframework.batch.item.json.JsonItemReader;
+import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+import java.text.SimpleDateFormat;
 
 @Slf4j
 @RequiredArgsConstructor
-//@Configuration
-public class XmlJob {
+@Configuration
+public class JsonJob {
 
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -32,37 +34,34 @@ public class XmlJob {
 
     @Bean
     @StepScope
-    public StaxEventItemReader<CustomerForXml> customerFileReader(
+    public JsonItemReader<CustomerWithTransactions> customerFileReader(
             @Value("#{jobParameters['customerFile']}")Resource inputFile) {
 
-        Resource inputFileLocalTest = new ClassPathResource("input/customer.xml");
+        Resource inputFileLocalTest = new ClassPathResource("input/customer.json");
 
-        return new StaxEventItemReaderBuilder<CustomerForXml>()
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"));
+
+        JacksonJsonObjectReader<CustomerWithTransactions> jsonObjectReader =
+                new JacksonJsonObjectReader<>(CustomerWithTransactions.class);
+        jsonObjectReader.setMapper(objectMapper);
+
+        return new JsonItemReaderBuilder<CustomerWithTransactions>()
                 .name("customerFileReader")
+                .jsonObjectReader(jsonObjectReader)
                 .resource(inputFileLocalTest)
-                .addFragmentRootElements("customer")
-                .unmarshaller(customerMarshaller())
                 .build();
     }
 
     @Bean
-    public Jaxb2Marshaller customerMarshaller() {
-        Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-
-        jaxb2Marshaller.setClassesToBeBound(CustomerForXml.class, Transaction.class);
-
-        return jaxb2Marshaller;
-    }
-
-    @Bean
     public ItemWriter itemWriter() {
-        return (items) -> items.forEach(System.out::println);
+        return (items -> items.forEach(System.out::println));
     }
 
     @Bean
     public Step copyFileStep() {
         return this.stepBuilderFactory.get("copyFileStep")
-                .<CustomerForXml, CustomerForXml>chunk(10)
+                .<CustomerWithTransactions, CustomerWithTransactions> chunk(10)
                 .reader(customerFileReader(null))
                 .writer(itemWriter())
                 .build();
@@ -70,9 +69,10 @@ public class XmlJob {
 
     @Bean
     public Job job() {
-        return this.jobBuilderFactory.get("job")
+        return this.jobBuilderFactory.get("JsonJob")
                 .start(copyFileStep())
                 .incrementer(new RunIdIncrementer())
                 .build();
     }
+
 }
