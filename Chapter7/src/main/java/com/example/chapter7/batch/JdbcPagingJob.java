@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class JdbcPagingJob {
 
     private final JobBuilderFactory jobBuilderFactory;

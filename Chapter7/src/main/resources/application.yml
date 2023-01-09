@@ -31,3 +31,8 @@ spring:
     init:
       mode: always # 기본적으로 memory db를 사용하지 않으면 schema.sql을 실행시키지 않습니다. 따라서 다른 db를 사용할 경우 initialization-mode를 설정해줘야 한다.
       platform: mariadb
+
+  jpa:
+    hibernate.naming: # 예제에서는 관습적으로 사용하는 언더스코어 표기법 대신 카멜 표기법을 사용했다.
+      implicit-strategy: "org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl"
+      physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
