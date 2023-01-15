@@ -23,7 +23,7 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class JpaJob {
 
     private final JobBuilderFactory jobBuilderFactory;
