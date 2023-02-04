@@ -12,6 +12,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.adapter.ItemProcessorAdapter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.support.ScriptItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -20,8 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 
 @EnableBatchProcessing
-//@SpringBootApplication(scanBasePackages = {"com.example.chapter8"})
-public class ItemProcessorAdapterJob {
+@SpringBootApplication(scanBasePackages = {"com.example.chapter8"})
+public class ScriptItemProcessorJob {
 
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
@@ -54,13 +55,14 @@ public class ItemProcessorAdapterJob {
     }
 
     @Bean
-    public ItemProcessorAdapter<Customer, Customer> itemProcessor(UpperCaseNameService service) {
-        ItemProcessorAdapter<Customer, Customer> adapter = new ItemProcessorAdapter<>();
+    @StepScope
+    public ScriptItemProcessor<Customer, Customer> itemProcessor(
+            @Value("#{jobParameters['script']}") Resource script) {
 
-        adapter.setTargetObject(service);
-        adapter.setTargetMethod("upperCase");
+        ScriptItemProcessor<Customer, Customer> itemProcessor = new ScriptItemProcessor<>();
+        itemProcessor.setScript(script);
 
-        return adapter;
+        return itemProcessor;
     }
 
     @Bean
@@ -75,12 +77,12 @@ public class ItemProcessorAdapterJob {
 
     @Bean
     public Job job() throws Exception {
-        return this.jobBuilderFactory.get("itemProcessorAdapterJob")
+        return this.jobBuilderFactory.get("job")
                 .start(copyFileStep())
                 .build();
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(ItemProcessorAdapterJob.class, "customerFile=/input/customer.csv");
+        SpringApplication.run(ScriptItemProcessorJob.class, "customerFile=/input/customer.csv", "script=/upperCase.js");
     }
 }
