@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Chapter2" />
+        <module name="Chapter9" />
         <module name="Chapter4" />
         <module name="Chapter6" />
         <module name="Chapter8" />
@@ -25,6 +26,7 @@
       <module name="Chapter6" options="-parameters" />
       <module name="Chapter7" options="-parameters" />
       <module name="Chapter8" options="-parameters" />
+      <module name="Chapter9" options="-parameters" />
     </option>
   </component>
 </project>
