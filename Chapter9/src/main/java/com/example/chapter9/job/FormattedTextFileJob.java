@@ -24,8 +24,8 @@ import org.springframework.core.io.Resource;
 
 import javax.swing.*;
 
-@SpringBootApplication
-@EnableBatchProcessing
+//@SpringBootApplication
+//@EnableBatchProcessing
 public class FormattedTextFileJob {
 
     @Autowired
